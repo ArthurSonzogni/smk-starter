@@ -32,4 +32,4 @@ if(CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$")
   )
 endif()
 
-install(TARGETS pigami RUNTIME DESTINATION "bin")
+install(TARGETS smkstarter RUNTIME DESTINATION "bin")
