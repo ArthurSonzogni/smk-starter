@@ -9,8 +9,7 @@ project(smkstarter
 
 add_executable(smkstarter
   src/main.cpp
-  src/util.hpp
-)
+  )
 
 target_include_directories(smkstarter PRIVATE src)
 target_link_libraries(smkstarter PRIVATE smk)
