@@ -9,15 +9,16 @@ confinement: strict
 base: core18
 apps:
   smk-starter:
-    command: desktop-launch ${SNAP}/usr/local/bin/smk-starter
+    command: ./bin/smk-starter
     plugs:
       - audio-playback
       - opengl
       - x11
 parts:
-
   # Build cmake from source to get a recent version.
   cmake:
+    source: .
+    #  https://github.com/Kitware/CMake
     source: https://github.com/Kitware/CMake
     source-type: git
     source-depth: 1
@@ -30,6 +31,25 @@ parts:
         $SNAPCRAFT_PART_SRC
       make -j 4
       make install
+    build-packages:
+      - build-essential
+      - libssl-dev
+      - libncurses5-dev
+    stage-packages:
+      - libssl1.1
+      - libncurses5
+      - libtinfo5
+
+  desktop-glib-only:
+    plugin: make
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: glib-only
+    build-packages:
+    - libglib2.0-dev
+    stage-packages:
+    - libglib2.0-bin
+    prime: []
+
 
   smk-starter:
     after: [cmake]
@@ -42,25 +62,16 @@ parts:
       - libpulse0
     build-packages:
       - libglu-dev
-      - libssl1.0-dev
+      - libssl-dev
       - libpulse-dev
       - xorg-dev
     override-build: |
       $SNAPCRAFT_STAGE/cmake/bin/cmake \
-        -DCMAKE_INSTALL_PREFIX=$SNAPCRAFT_PART_INSTALL/usr/local \
-        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=$SNAPCRAFT_PART_INSTALL \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         $SNAPCRAFT_PART_SRC
       make -j 4
       make install
-
-  desktop-glib-only:
-    plugin: make
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-subdir: glib-only
-    build-packages:
-    - libglib2.0-dev
-    stage-packages:
-    - libglib2.0-bin
 
 passthrough:
   title: smk-starter
