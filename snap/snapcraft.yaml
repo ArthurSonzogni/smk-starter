@@ -9,7 +9,7 @@ confinement: strict
 base: core18
 apps:
   smk-starter:
-    command: ./bin/smk-starter
+    command: desktop-launch ${SNAP}/bin/smk-starter
     plugs:
       - audio-playback
       - opengl
@@ -39,16 +39,27 @@ parts:
       - libtinfo5
     prime: []
 
+  desktop-glib-only:
+    plugin: make	   
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git	   
+    source-subdir: glib-only	   
+    build-packages:	   
+    - libglib2.0-dev	   
+    stage-packages:	   
+    - libglib2.0-bin
+
   smk-starter:
-    after: [cmake]
+    after: [cmake, desktop-glib-only]
     plugin: cmake
     source: https://github.com/ArthurSonzogni/smk-starter
     source-type: git
     source-depth: 1
     stage-packages:
+      - libpulse0
       - libgl1-mesa-glx
     build-packages:
       - libglu-dev
+      - libpulse-dev
       - xorg-dev
     override-build: |
       $SNAPCRAFT_STAGE/cmake/bin/cmake \
