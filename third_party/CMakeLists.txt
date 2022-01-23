@@ -1,9 +1,13 @@
 include(FetchContent)
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED TRUE)
+set(FETCHCONTENT_QUIET FALSE)
+
 FetchContent_Declare(smk
   GIT_REPOSITORY https://github.com/ArthurSonzogni/smk
-  # TODO: Set a commit hash to use a fixed version of SMK.
+  GIT_TAG 65ff24ee244f83e019bf6fb36322c070dbf18875
+  GIT_PROGRESS TRUE
+  GIT_SHALLOW TRUE
 )
 
 FetchContent_GetProperties(smk)
