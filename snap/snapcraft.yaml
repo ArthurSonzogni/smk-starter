@@ -4,11 +4,11 @@ summary: My summary
 description: 'A simple starter project for the SMK library.'
 grade: stable
 confinement: strict
-base: core18
+base: core20
 
 apps:
   smk-starter:
-    command: desktop-launch ${SNAP}/bin/smk-starter
+    command: bin/desktop-launch $SNAP/usr/bin/smk-starter
     plugs:
     - audio-playback
     - opengl
@@ -30,24 +30,22 @@ parts:
     after:
     - desktop-glib-only
     plugin: cmake
-    build-snaps: [cmake/latest/edge] # We need cmake >= 3.11
     source: https://github.com/ArthurSonzogni/smk-starter
     source-type: git
-    source-depth: 1
     stage-packages:
-    - libgl1-mesa-glx
-    - libpulse0
+      - libgl1-mesa-glx
+      - libopengl0
+      - libpulse0
     build-packages:
-    - libglu-dev
-    - libpulse-dev
-    - xorg-dev
-    override-build: |
-      /snap/bin/cmake \
-        -DCMAKE_INSTALL_PREFIX=$SNAPCRAFT_PART_INSTALL \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        $SNAPCRAFT_PART_SRC
-      make -j ${SNAPCRAFT_PARALLEL_BUILD_COUNT}
-      make install
+      - libglu1-mesa-dev
+      - libpulse-dev
+      - xorg-dev
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version $(git rev-list --count HEAD)
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
 
 passthrough:
   title: smk-starter
